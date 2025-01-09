@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import "dotenv/config";
 
+import { compareOrigins } from "../utils";
+
 export default function customCors(
   req: Request,
   res: Response,
@@ -14,7 +16,17 @@ export default function customCors(
 
   const origin = req.headers.origin;
   console.log("origin", origin);
-  if (!origin || origin !== clientUrl) {
+  // if (!origin || origin !== clientUrl) {
+  //   res.status(403).json({ message: "Forbidden" });
+  //   return;
+  // }
+
+  if (!origin) {
+    res.status(403).json({ message: "Forbidden" });
+    return;
+  }
+  const isOriginAllowed = compareOrigins(origin, clientUrl);
+  if (!isOriginAllowed) {
     res.status(403).json({ message: "Forbidden" });
     return;
   }
