@@ -13,6 +13,7 @@ export default function customCors(
   }
 
   const origin = req.headers.origin;
+  console.log("origin", origin);
   if (!origin || origin !== clientUrl) {
     res.status(403).json({ message: "Forbidden" });
     return;
