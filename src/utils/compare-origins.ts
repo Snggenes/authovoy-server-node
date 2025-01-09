@@ -1,11 +1,13 @@
+import trimOrigins from "./trim-origins";
+
 export default function compareOrigins(
   firstOrigin: string,
   secondOrigin: string
 ) {
-  firstOrigin = firstOrigin.replace(/\/$/, "");
-  secondOrigin = secondOrigin.replace(/\/$/, "");
+  const trimmedFirstOrigin = trimOrigins(firstOrigin);
+  const trimmedSecondOrigin = trimOrigins(secondOrigin);
 
-  if (firstOrigin === secondOrigin) {
+  if (trimmedFirstOrigin === trimmedSecondOrigin) {
     return true;
   }
 
