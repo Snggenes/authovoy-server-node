@@ -13,7 +13,7 @@ app.use(helmet());
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/api", (req, res) => {
-  res.json({ message: "Hello World" });
+  res.json({ message: "Hello Worlddd" });
 });
 
 export default app;
