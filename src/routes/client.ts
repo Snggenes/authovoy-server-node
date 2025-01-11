@@ -196,6 +196,7 @@ router.get("/profile", async (req, res, next) => {
           maxAge: 1000 * 60 * 15,
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
+          sameSite: "none",
         });
 
         const {
