@@ -1,9 +1,9 @@
 import { Response } from "express";
 
 const setAuthCookies = (
-  res: Response,
   accessToken: string,
-  refreshToken: string
+  refreshToken: string,
+  res: Response
 ) => {
   res.cookie("srt", refreshToken, {
     httpOnly: true,

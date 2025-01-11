@@ -24,11 +24,19 @@ export function verifyAccessTokenForClients(accessToken: string) {
     throw new Error("ACCESS_TOKEN_SECRET is not defined");
   }
 
-  const payload = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
-  return payload;
+  try {
+    const payload = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+  return {success: true, data: payload};
+  } catch (error) {
+    return {success: false, data: null};
+  }
 }
 
 export function generateRefreshToken() {
   const refreshToken = randomBytes(64).toString("hex");
   return refreshToken;
+}
+
+export function generateDeviceId() {
+  return randomBytes(64).toString("hex");
 }

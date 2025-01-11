@@ -1,7 +1,7 @@
 import mongoose, { CallbackError } from "mongoose";
 import bcrypt from "bcrypt";
 
-type TClient = {
+export type TClient = {
   _id: string;
   status: string;
   picture: string | null;
@@ -45,17 +45,27 @@ const clientSchema = new mongoose.Schema<TClient>(
   }
 );
 
-clientSchema.pre("save", async function (next) {
-  try {
-    if (this.isModified("passwordHash") && this.passwordHash) {
-      const salt = await bcrypt.genSalt(10);
-      this.passwordHash = await bcrypt.hash(this.passwordHash, salt);
-    }
-    next();
-  } catch (error) {
-    next(error as CallbackError);
-  }
-});
+// clientSchema.pre("save", async function (next) {
+//   try {
+//     if (this.isModified("passwordHash") && this.passwordHash) {
+//       const salt = await bcrypt.genSalt(10);
+//       this.passwordHash = await bcrypt.hash(this.passwordHash, salt);
+//     }
+//     next();
+//   } catch (error) {
+//     next(error as CallbackError);
+//   }
+// });
+
+// clientSchema.methods.comparePassword = async function (
+//   password: string
+// ): Promise<boolean> {
+//   if (!this.passwordHash) {
+//     throw new Error("Password not set for this client");
+//   }
+//   const isMatch = await bcrypt.compare(password, this.passwordHash);
+//   return isMatch;
+// };
 
 const ClientModel = mongoose.model<TClient>("Client", clientSchema);
 
