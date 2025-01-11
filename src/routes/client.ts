@@ -195,6 +195,7 @@ router.get("/profile", async (req, res, next) => {
         res.cookie("sat", newAccessToken, {
           maxAge: 1000 * 60 * 15,
           httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
         });
 
         const {
