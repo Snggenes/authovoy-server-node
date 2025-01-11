@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
+import cors, { CorsOptions } from "cors";
 import "dotenv/config";
-
 import { compareOrigins } from "../utils";
 
 export default function customCors(
@@ -17,20 +17,28 @@ export default function customCors(
   const origin = req.headers.origin;
   console.log("origin", origin);
 
-  if (!origin) {
-    res.status(403).json({ message: "Forbidden" });
-    return;
-  }
-  const isOriginAllowed = compareOrigins(origin, clientUrl);
-  if (!isOriginAllowed) {
-    res.status(403).json({ message: "Forbidden" });
-    return;
-  }
+  const isDev = process.env.NODE_ENV === "development";
 
-  res.header("Access-Control-Allow-Origin", origin);
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-  res.header("Access-Control-Allow-Headers", "Content-Type, application/json");
-  res.header("Access-Control-Allow-Credentials", "true");
+  const options: CorsOptions = {
+    origin: (origin: string | undefined, callback: Function) => {
+      if (isDev) {
+        callback(null, true);
+        return;
+      }
 
-  next();
+      if (!origin || !compareOrigins(origin, clientUrl)) {
+        const msg = `The CORS policy for this site does not allow access from the specified Origin: ${origin}`;
+        return callback(new Error(msg), false);
+      }
+
+      return callback(null, true);
+    },
+    methods: "GET, POST, PUT, DELETE",
+    allowedHeaders: ["Content-Type"],
+    credentials: true,
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+  };
+
+  cors(options)(req, res, next);
 }
